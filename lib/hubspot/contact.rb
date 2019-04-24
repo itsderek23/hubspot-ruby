@@ -12,6 +12,7 @@ class Hubspot::Contact < Hubspot::Resource
   MERGE_PATH              = '/contacts/v1/contact/merge-vids/:id/'
   SEARCH_PATH             = '/contacts/v1/search/query'
   UPDATE_PATH             = '/contacts/v1/contact/vid/:id/profile'
+  RECENTLY_CREATED_PATH  = '/contacts/v1/lists/all/contacts/recent'
 
   class << self
     def all(opts = {})
@@ -23,6 +24,19 @@ class Hubspot::Contact < Hubspot::Resource
 
         contacts = response["contacts"].map { |result| from_result(result) }
         [contacts, response["vid-offset"], response["has-more"]]
+      end
+    end
+
+    def recently_created(opts = {})
+      Hubspot::PagedModifiedCollection.new(opts) do |options, offset, time_offset, limit|
+        # the block is called via fetch
+        # Rails.logger.info("Time Offset: #{Time.zone.at(time_offset/1000)}")
+        response = Hubspot::Connection.get_json(
+          RECENTLY_CREATED_PATH,
+          options.merge("count" => limit, "vidOffset" => offset, "timeOffset" => time_offset, hapikey: @api_key)
+          )
+        contacts = response["contacts"].map { |result| from_result(result) }
+        [contacts, response["vid-offset"], response['time-offset'], response["has-more"]]
       end
     end
 

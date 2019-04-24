@@ -5,6 +5,8 @@ module Hubspot
     class_attribute :property_name_field, instance_writer: false, default: "property"
     class_attribute :update_method, instance_writer: false, default: "put"
 
+    attr_reader :properties
+
     class << self
       def from_result(result)
         resource = new(result[id_field])
