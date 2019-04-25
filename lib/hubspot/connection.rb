@@ -71,8 +71,8 @@ module Hubspot
         MSG
       end
 
-      def hapikey(opts = {})
-        opts.delete(:hapikey) || Hubspot::Config.hapikey
+      def hapikey(params = {})
+        params.delete(:hapikey) || Hubspot::Config.hapikey
       end
 
 

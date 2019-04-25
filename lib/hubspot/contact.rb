@@ -33,7 +33,7 @@ class Hubspot::Contact < Hubspot::Resource
         # Rails.logger.info("Time Offset: #{Time.zone.at(time_offset/1000)}")
         response = Hubspot::Connection.get_json(
           RECENTLY_CREATED_PATH,
-          options.merge("count" => limit, "vidOffset" => offset, "timeOffset" => time_offset, hapikey: @api_key)
+          options.merge("count" => limit, "vidOffset" => offset, "timeOffset" => time_offset)
           )
         contacts = response["contacts"].map { |result| from_result(result) }
         [contacts, response["vid-offset"], response['time-offset'], response["has-more"]]
